@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Language Exam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F2F5F1;
+    --card:#FFFFFF;
+    --ink:#243430;
+    --ink-soft:#5C6E68;
+    --teal:#2D4F4F;
+    --teal-deep:#1C3434;
+    --sage:#7FA8A3;
+    --sage-soft:#DFEAE7;
+    --peach:#E8A87C;
+    --peach-soft:#FBEADD;
+    --success:#5F9E78;
+    --success-soft:#E5F1E9;
+    --warn:#C97A63;
+    --warn-soft:#FBE6E0;
+    --neutral-soft:#EDEFEC;
+    --border:#E1E8E4;
+    --shadow: 0 14px 34px -16px rgba(28,52,52,0.22);
+    --radius:18px;
+    --serif:'Fraunces', serif;
+    --sans:'Work Sans', sans-serif;
+    --mono:'JetBrains Mono', monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    background-image: radial-gradient(circle at 8% 0%, rgba(127,168,163,0.16), transparent 45%),
+                       radial-gradient(circle at 95% 15%, rgba(232,168,124,0.14), transparent 40%);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .page{max-width:780px; margin:0 auto; padding:28px 20px 80px;}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:6px 4px 26px;}
+  .hero-top{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px;}
+  .eyebrow{
+    font-family:var(--mono); font-size:12.5px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--teal); background:var(--sage-soft); padding:6px 12px; border-radius:999px;
+  }
+  .timer-badge{
+    display:flex; align-items:center; gap:8px;
+    background:var(--card); border:1px solid var(--border); border-radius:999px;
+    padding:7px 14px; box-shadow:var(--shadow); font-family:var(--mono); font-size:14px; color:var(--teal-deep);
+  }
+  .timer-dot{width:8px; height:8px; border-radius:50%; background:var(--success); animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+
+  .hero h1{
+    font-family:var(--serif); font-weight:500; font-size:clamp(28px,5vw,40px);
+    margin:0 0 12px; color:var(--teal-deep); letter-spacing:-0.01em;
+  }
+  .hero h1 em{font-style:italic; color:var(--peach); font-weight:500;}
+  .hero-sub{margin:0; color:var(--ink-soft); font-size:15.5px; max-width:560px;}
+
+  /* ---------- PROGRESS ---------- */
+  .progress-wrap{
+    position:sticky; top:14px; z-index:40;
+    background:var(--card); border:1px solid var(--border); border-radius:16px;
+    padding:14px 18px; box-shadow:var(--shadow); margin-bottom:34px;
+  }
+  .progress-row{display:flex; align-items:center; gap:12px;}
+  .progress-leaf{font-size:18px;}
+  .progress-track{flex:1; height:10px; background:var(--neutral-soft); border-radius:999px; overflow:hidden;}
+  .progress-fill{
+    height:100%; width:0%; border-radius:999px;
+    background:linear-gradient(90deg, var(--sage), var(--teal));
+    transition:width .45s ease;
+  }
+  .progress-count{font-family:var(--mono); font-size:13px; color:var(--teal-deep); min-width:48px; text-align:right;}
+  .progress-note{margin:8px 2px 0; font-size:13px; color:var(--ink-soft);}
+
+  /* ---------- PARTS ---------- */
+  .part{margin-bottom:46px;}
+  .part-head{display:flex; gap:14px; align-items:flex-start; margin-bottom:18px;}
+  .part-num{
+    font-family:var(--serif); font-style:italic; font-size:30px; color:var(--peach);
+    line-height:1; padding-top:2px;
+  }
+  .part-head h2{font-family:var(--serif); font-weight:500; font-size:23px; margin:0 0 4px; color:var(--teal-deep);}
+  .part-head p{margin:0; color:var(--ink-soft); font-size:14.5px;}
+
+  /* ---------- QUESTION CARDS ---------- */
+  .question-list{display:flex; flex-direction:column; gap:12px;}
+  .question-card{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:16px 18px; box-shadow:var(--shadow);
+    opacity:0; transform:translateY(10px);
+    transition:opacity .5s ease, transform .5s ease, border-color .3s ease, background .3s ease;
+  }
+  .question-card.in-view{opacity:1; transform:translateY(0);}
+  .q-row{display:flex; gap:10px; align-items:baseline; margin-bottom:12px;}
+  .q-number{font-family:var(--mono); font-size:12.5px; color:var(--sage); background:var(--sage-soft); padding:2px 8px; border-radius:999px; flex-shrink:0;}
+  .q-text{font-size:15.5px; color:var(--ink);}
+  .options-row{display:flex; gap:10px;}
+  .opt-btn{
+    flex:1; display:flex; align-items:center; gap:10px; text-align:left;
+    background:var(--bg); border:1.5px solid var(--border); border-radius:12px;
+    padding:10px 12px; cursor:pointer; font-family:var(--sans); font-size:14.5px; color:var(--ink);
+    transition:border-color .2s ease, background .2s ease, transform .15s ease;
+  }
+  .opt-btn:hover{border-color:var(--sage); transform:translateY(-1px);}
+  .opt-btn .letter{
+    width:24px; height:24px; border-radius:50%; background:var(--card); border:1.5px solid var(--border);
+    display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:12px; flex-shrink:0;
+    color:var(--ink-soft);
+  }
+  .opt-btn.selected{background:var(--sage-soft); border-color:var(--teal);}
+  .opt-btn.selected .letter{background:var(--teal); border-color:var(--teal); color:#fff;}
+
+  .question-card.is-correct{border-color:var(--success);}
+  .question-card.is-correct .opt-btn.selected{background:var(--success-soft); border-color:var(--success);}
+  .question-card.is-correct .opt-btn.selected .letter{background:var(--success); border-color:var(--success);}
+
+  .question-card.is-wrong{border-color:var(--warn);}
+  .question-card.is-wrong .opt-btn.selected{background:var(--warn-soft); border-color:var(--warn);}
+  .question-card.is-wrong .opt-btn.selected .letter{background:var(--warn); border-color:var(--warn);}
+
+  .question-card.locked .opt-btn{cursor:default; pointer-events:none;}
+
+  .feedback-note{
+    margin-top:12px; padding:10px 12px; border-radius:10px; font-size:13.5px;
+    background:var(--neutral-soft); color:var(--ink-soft); display:none;
+  }
+  .question-card.is-wrong .feedback-note{display:block; background:var(--warn-soft); color:#7A4636;}
+  .feedback-note strong{color:var(--teal-deep);}
+
+  /* ---------- PASSAGE / TEXT CARDS ---------- */
+  .passage-card, .text-card{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:22px 24px; box-shadow:var(--shadow); margin-bottom:18px;
+  }
+  .passage-card h3{font-family:var(--serif); font-weight:500; font-size:19px; margin:0 0 12px; color:var(--teal-deep);}
+  .passage-card p{margin:0 0 14px; font-size:14.8px; color:var(--ink);}
+  .passage-card p:last-child{margin-bottom:0;}
+
+  .text-card blockquote{
+    margin:0 0 16px; padding:14px 16px; border-left:3px solid var(--peach);
+    background:var(--peach-soft); border-radius:10px; font-size:14.5px; color:var(--ink); font-style:italic;
+  }
+  .essay-prompt{font-size:15px; margin:0 0 6px;}
+  .essay-hint{font-size:13.5px; color:var(--ink-soft); margin:0 0 16px;}
+  textarea{
+    width:100%; min-height:110px; resize:vertical; border:1.5px solid var(--border); border-radius:12px;
+    padding:14px; font-family:var(--sans); font-size:14.5px; color:var(--ink); background:var(--bg);
+    transition:border-color .2s ease;
+  }
+  textarea:focus{outline:none; border-color:var(--teal);}
+  #essayInput{min-height:200px;}
+  .word-count{margin-top:8px; font-size:12.5px; color:var(--ink-soft); font-family:var(--mono);}
+  .text-feedback{
+    margin-top:14px; padding:12px 14px; border-radius:10px; background:var(--success-soft); color:#33543F;
+    font-size:14px; display:none;
+  }
+  .text-feedback.show{display:block;}
+
+  /* ---------- SUBMIT ---------- */
+  .submit-zone{text-align:center; margin-top:10px;}
+  #submitBtn{
+    font-family:var(--sans); font-weight:600; font-size:16px; color:#fff;
+    background:linear-gradient(120deg, var(--teal), var(--teal-deep));
+    border:none; padding:15px 38px; border-radius:999px; cursor:pointer;
+    box-shadow:0 14px 28px -10px rgba(28,52,52,0.45);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  #submitBtn:hover{transform:translateY(-2px); box-shadow:0 18px 32px -10px rgba(28,52,52,0.5);}
+  .submit-hint{margin-top:10px; font-size:13px; color:var(--ink-soft);}
+
+  /* ---------- RESULTS ---------- */
+  .results-panel{
+    background:var(--card); border:1px solid var(--border); border-radius:20px;
+    padding:28px 26px; box-shadow:var(--shadow); margin-bottom:36px;
+    animation:scaleIn .5s ease;
+  }
+  .results-panel.hidden{display:none;}
+  @keyframes scaleIn{from{opacity:0; transform:scale(.97);} to{opacity:1; transform:scale(1);}}
+  .results-top{display:flex; align-items:center; gap:22px; flex-wrap:wrap;}
+  .score-big{font-family:var(--mono); font-size:42px; color:var(--teal-deep); font-weight:600;}
+  .score-pct{font-family:var(--mono); font-size:16px; color:var(--sage); margin-top:2px;}
+  .results-msg{font-family:var(--serif); font-size:19px; color:var(--teal-deep); flex:1; min-width:200px;}
+  .breakdown{display:flex; gap:16px; margin-top:18px; flex-wrap:wrap;}
+  .breakdown-item{
+    background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:10px 16px; font-size:13.5px; color:var(--ink-soft);
+  }
+  .breakdown-item b{color:var(--teal-deep); font-family:var(--mono);}
+  .results-note{margin-top:18px; font-size:13.5px; color:var(--ink-soft);}
+
+  @media (max-width:560px){
+    .options-row{flex-direction:column;}
+    .hero h1{font-size:26px;}
+    .part-num{font-size:24px;}
+    .results-top{flex-direction:column; align-items:flex-start;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+    .question-card{opacity:1; transform:none;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="hero">
+    <div class="hero-top">
+      <span class="eyebrow">English Language Exam</span>
+      <div class="timer-badge"><span class="timer-dot"></span><span id="timerText">00:00</span></div>
+    </div>
+    <h1>Breathe. Begin. <em>You've got this.</em></h1>
+    <p class="hero-sub">Work through each part at your own pace. Grammar and reading are scored instantly — translation and writing are just for you to express yourself, so there's no pressure there.</p>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-row">
+      <span class="progress-leaf">🌿</span>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <span class="progress-count" id="progressCount">0/40</span>
+    </div>
+    <p class="progress-note" id="progressNote">Let's get started — take your time.</p>
+  </div>
+
+  <section class="results-panel hidden" id="resultsPanel"></section>
+
+  <main>
+
+    <section class="part" id="part-grammar">
+      <div class="part-head">
+        <span class="part-num">01</span>
+        <div>
+          <h2>Grammar in Context</h2>
+          <p>Choose option A or B to complete each sentence correctly.</p>
+        </div>
+      </div>
+      <div class="question-list" id="grammarList"></div>
+    </section>
+
+    <section class="part" id="part-reading">
+      <div class="part-head">
+        <span class="part-num">02</span>
+        <div>
+          <h2>Reading Comprehension</h2>
+          <p>Read the passage carefully, then answer the questions below.</p>
+        </div>
+      </div>
+
+      <div class="passage-card">
+        <h3>Children, Play, and the Natural World</h3>
+        <p>In recent decades, the nature of childhood has experienced a dramatic shift, moving from outdoor exploration to a more sedentary, indoor lifestyle. With the rise of urbanization and the constant presence of digital entertainment, many children today spend significantly less time interacting with the natural world. This growing disconnect has raised concerns among pediatricians and educators, who emphasize that engaging with nature is not just a leisure activity, but a fundamental requirement for healthy child development.</p>
+        <p>The physical and cognitive benefits of unstructured outdoor play are immense. When children navigate uneven terrains, climb trees, or run in open spaces, they naturally develop gross motor skills, coordination, and physical strength. Furthermore, the outdoors provides an open-ended environment that stimulates imagination and creative problem-solving. Unlike highly structured digital games with predetermined rules, nature allows children to invent their own games, take manageable risks, and learn through trial and error.</p>
+        <p>Beyond physical health, spending time in green spaces has a profound impact on a child's psychological and emotional well-being. Studies have shown that exposure to sunlight and fresh air can significantly reduce stress and anxiety levels in young minds. Moreover, interacting with nature has been linked to improved attention spans and better focus, helping to combat the symptoms of what some experts call "nature deficit disorder." In these natural settings, children also build emotional resilience and a sense of independence.</p>
+        <p>Ultimately, restoring the balance between modern conveniences and the natural world is crucial for the holistic development of future generations. While technology and indoor learning are undeniably important in the 21st century, they should not replace the invaluable lessons taught by the great outdoors. Parents, schools, and urban planners must work collaboratively to create safe, accessible green spaces, ensuring that every child has the opportunity to discover the wonders of nature.</p>
+      </div>
+
+      <div class="question-list" id="readingList"></div>
+    </section>
+
+    <section class="part" id="part-translation">
+      <div class="part-head">
+        <span class="part-num">03</span>
+        <div>
+          <h2>Translation</h2>
+          <p>Translate the paragraph below into Arabic. This part is reviewed personally, so just do your best.</p>
+        </div>
+      </div>
+      <div class="text-card">
+        <blockquote>Every child learns differently, but for children with special needs, personalized approaches are not just beneficial; they are absolutely essential. One of the most effective tools in special education is the Individualized Education Program (IEP). An IEP is a legally binding document created by a team of teachers, specialists, and parents. It outlines specific learning goals, required accommodations, and targeted support strategies tailored to the unique strengths and challenges of a specific child, ensuring they receive a meaningful and accessible education.</blockquote>
+        <textarea id="translationInput" placeholder="Write your Arabic translation here..."></textarea>
+        <div class="text-feedback" id="translationFeedback">✨ Your translation has been received — well done for giving it your best shot! It will be reviewed personally soon.</div>
+      </div>
+    </section>
+
+    <section class="part" id="part-essay">
+      <div class="part-head">
+        <span class="part-num">04</span>
+        <div>
+          <h2>Writing — Short Essay</h2>
+          <p>Share your honest thoughts in English. There's no time pressure here.</p>
+        </div>
+      </div>
+      <div class="text-card">
+        <p class="essay-prompt"><strong>Topic:</strong> The Impact of Technology on Children</p>
+        <p class="essay-hint">Think about: the benefits, the risks, and how parents and schools might find a healthy balance.</p>
+        <textarea id="essayInput" placeholder="Start writing here..."></textarea>
+        <div class="word-count"><span id="wordCount">0</span> words</div>
+        <div class="text-feedback" id="essayFeedback">📝 Your essay has been submitted successfully! Thank you for sharing your thoughts so thoughtfully — it will be reviewed personally soon.</div>
+      </div>
+    </section>
+
+    <div class="submit-zone">
+      <button id="submitBtn">Submit My Exam</button>
+      <p class="submit-hint" id="submitHint">You can review and change your answers anytime before submitting.</p>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const grammarQuestions = [
+  {id:"g1", text:"I ___ TV when she called.", a:"was watching", b:"watched", correct:"a", exp:"Past Continuous shows the longer action in progress, while \"called\" is the shorter action that interrupted it."},
+  {id:"g2", text:"While John ___ last night, someone stole his car.", a:"slept", b:"was sleeping", correct:"b", exp:"After \"while\", we usually use the Past Continuous for an action already in progress."},
+  {id:"g3", text:"Last night at 6 PM, I ___ dinner.", a:"was eating", b:"ate", correct:"a", exp:"A specific time can interrupt an ongoing action — at 6 PM I was already in the middle of eating."},
+  {id:"g4", text:"She ___ always coming to class late, and it really annoyed the teacher.", a:"was", b:"is", correct:"a", exp:"\"Was/were + always + -ing\" describes an irritating, repeated habit in the past."},
+  {id:"g5", text:"When I walked into the office, several people ___ on the phones.", a:"were talking", b:"talked", correct:"a", exp:"Past Continuous describes parallel background actions happening at the same past moment."},
+  {id:"g6", text:"Please be quiet. The children ___.", a:"sleep", b:"are sleeping", correct:"b", exp:"Present Continuous describes an action happening right now."},
+  {id:"g7", text:"Look! She ___ a letter right now.", a:"writes", b:"is writing", correct:"b", exp:"\"Look!\" and \"right now\" signal an action in progress — Present Continuous."},
+  {id:"g8", text:"I ___ to a new school next term.", a:"am going", b:"go", correct:"a", exp:"Present Continuous can describe a future plan that has already been arranged."},
+  {id:"g9", text:"The climate ___ rapidly these days.", a:"changes", b:"is changing", correct:"b", exp:"Present Continuous can show that something is changing or developing over time."},
+  {id:"g10", text:"I ___ what you mean.", a:"understand", b:"am understanding", correct:"a", exp:"\"Understand\" is a stative verb and isn't normally used in the continuous form."},
+  {id:"g11", text:"The sun ___ in the east.", a:"rises", b:"is rising", correct:"a", exp:"Present Simple states a general, permanent truth."},
+  {id:"g12", text:"She ___ to the gym every Tuesday.", a:"goes", b:"is going", correct:"a", exp:"Present Simple describes a regular habit, often with time words like \"every Tuesday\"."},
+  {id:"g13", text:"I will call you when I ___ time.", a:"have", b:"will have", correct:"a", exp:"After time words like \"when\", \"until\", \"before\", we use Present Simple even with future meaning."},
+  {id:"g14", text:"Water ___ at 100 degrees Celsius.", a:"boils", b:"is boiling", correct:"a", exp:"This is a scientific fact, so Present Simple is correct."},
+  {id:"g15", text:"She ___ in London for six months.", a:"has lived", b:"lived", correct:"a", exp:"Present Perfect with \"for\" shows a duration that continues up to now."},
+  {id:"g16", text:"___ you ever been to Paris?", a:"Have", b:"Did", correct:"a", exp:"\"Ever\" is used with the Present Perfect to ask about unspecified time before now."},
+  {id:"g17", text:"People ___ to the moon.", a:"have traveled", b:"traveled", correct:"a", exp:"Present Perfect is used for general facts or events at an unspecified time."},
+  {id:"g18", text:"I have ___ finished my homework, so I can go out now.", a:"already", b:"yet", correct:"a", exp:"\"Already\" shows something happened sooner than expected, used in positive sentences."},
+  {id:"g19", text:"Have you cleaned your room ___?", a:"yet", b:"already", correct:"a", exp:"\"Yet\" is used in questions and negatives to ask if something has happened up to now."},
+  {id:"g20", text:"I have ___ been to Japan; it's on my bucket list.", a:"never", b:"ever", correct:"a", exp:"\"Never\" means \"at no time\" and fits this negative meaning."},
+  {id:"g21", text:"He has ___ arrived; his coat is still wet from the rain.", a:"just", b:"yet", correct:"a", exp:"\"Just\" describes something that happened a very short time ago."},
+  {id:"g22", text:"I have lived here ___ five years.", a:"for", b:"since", correct:"a", exp:"\"For\" is used with a period of time, like \"five years\"."},
+  {id:"g23", text:"She has been studying English ___ 2020.", a:"for", b:"since", correct:"b", exp:"\"Since\" is used with the starting point of a period, like the year 2020."},
+  {id:"g24", text:"We have been waiting ___ two hours.", a:"for", b:"since", correct:"a", exp:"\"For\" is used with a length of time, like \"two hours\"."},
+  {id:"g25", text:"He ___ to Italy; he is there now.", a:"has gone", b:"has been", correct:"a", exp:"\"Gone to\" means someone has traveled somewhere and is still there."},
+  {id:"g26", text:"They ___ to Brazil and have already come back.", a:"have been", b:"have gone", correct:"a", exp:"\"Been to\" means the trip is finished and the person has returned."},
+  {id:"g27", text:"We ___ to Spain for our holiday last year.", a:"went", b:"go", correct:"a", exp:"A finished action at a specific past time needs the Simple Past."},
+  {id:"g28", text:"___ you see that film yesterday?", a:"Did", b:"Have", correct:"a", exp:"Questions about a specific past time use \"did\" + Simple Past."},
+  {id:"g29", text:"They ___ go to school; they always skipped class.", a:"didn't", b:"doesn't", correct:"a", exp:"Past negatives are formed with \"didn't\" + the base verb."},
+  {id:"g30", text:"He ___ fourteen novels in his lifetime.", a:"wrote", b:"writed", correct:"a", exp:"\"Write\" is irregular — its past form is \"wrote\", not \"writed\"."}
+];
+
+const readingQuestions = [
+  {id:"r1", text:"What is the main focus of the passage?", a:"The importance of outdoor play and connecting with nature", b:"How to design better digital games for kids", correct:"a", exp:"The whole passage centers on why outdoor play and connecting with nature matter for children's development."},
+  {id:"r2", text:"Why are children today spending less time in nature, according to paragraph 1?", a:"Due to urbanization and digital entertainment", b:"Because outdoor spaces are too expensive", correct:"a", exp:"Paragraph 1 states that urbanization and constant digital entertainment have reduced children's time in nature."},
+  {id:"r3", text:"How does outdoor play affect physical development?", a:"It naturally develops motor skills and coordination", b:"It causes severe long-term injuries", correct:"a", exp:"Paragraph 2 explains that unstructured play helps children develop gross motor skills, coordination, and strength."},
+  {id:"r4", text:"What makes nature different from structured digital games?", a:"It has strict, predetermined rules", b:"It is an open-ended environment that stimulates imagination", correct:"b", exp:"Paragraph 2 contrasts nature's open-ended environment with the predetermined rules of digital games."},
+  {id:"r5", text:"The word \"sedentary\" in paragraph 1 is closest in meaning to:", a:"Inactive and involving a lot of sitting", b:"Highly energetic and fast-paced", correct:"a", exp:"In context, \"sedentary\" describes a lifestyle with little movement — inactive and full of sitting."},
+  {id:"r6", text:"What psychological benefit is linked to spending time in green spaces?", a:"It significantly reduces stress and anxiety", b:"It increases feelings of anger and isolation", correct:"a", exp:"Paragraph 3 says exposure to sunlight and fresh air can significantly reduce stress and anxiety."},
+  {id:"r7", text:"What is \"nature deficit disorder\" associated with in the text?", a:"A rare genetic disease", b:"A lack of exposure to the natural world", correct:"b", exp:"The passage links \"nature deficit disorder\" to a lack of exposure to the natural world."},
+  {id:"r8", text:"What can help improve a child's attention span, according to the passage?", a:"Interacting with nature", b:"Watching more television indoors", correct:"a", exp:"Paragraph 3 states that interacting with nature has been linked to improved attention spans."},
+  {id:"r9", text:"What is recommended in the final paragraph?", a:"Completely banning all technology for children", b:"Restoring the balance between modern conveniences and the natural world", correct:"b", exp:"The final paragraph calls for restoring balance, not banning technology."},
+  {id:"r10", text:"What does the pronoun \"they\" in paragraph 4 refer to?", a:"Parents, schools, and urban planners", b:"Technology and indoor learning", correct:"a", exp:"\"They\" refers back to parents, schools, and urban planners mentioned just before it."}
+];
+
+const answers = {};
+const TOTAL = grammarQuestions.length + readingQuestions.length;
+let submitted = false;
+let seconds = 0;
+let timerInterval = null;
+
+function buildCard(q, prefix){
+  const card = document.createElement("div");
+  card.className = "question-card";
+  card.dataset.id = q.id;
+
+  const qRow = document.createElement("div");
+  qRow.className = "q-row";
+  const num = document.createElement("span");
+  num.className = "q-number";
+  num.textContent = prefix;
+  const text = document.createElement("span");
+  text.className = "q-text";
+  text.textContent = q.text;
+  qRow.appendChild(num);
+  qRow.appendChild(text);
+
+  const optRow = document.createElement("div");
+  optRow.className = "options-row";
+
+  ["a","b"].forEach(letter=>{
+    const btn = document.createElement("button");
+    btn.className = "opt-btn";
+    btn.dataset.value = letter;
+    btn.innerHTML = '<span class="letter">' + letter.toUpperCase() + '</span><span>' + q[letter] + '</span>';
+    btn.addEventListener("click", ()=>{
+      if(submitted) return;
+      answers[q.id] = letter;
+      optRow.querySelectorAll(".opt-btn").forEach(b=>b.classList.remove("selected"));
+      btn.classList.add("selected");
+      updateProgress();
+    });
+    optRow.appendChild(btn);
+  });
+
+  const note = document.createElement("div");
+  note.className = "feedback-note";
+
+  card.appendChild(qRow);
+  card.appendChild(optRow);
+  card.appendChild(note);
+  return card;
+}
+
+const grammarList = document.getElementById("grammarList");
+grammarQuestions.forEach((q,i)=> grammarList.appendChild(buildCard(q, "G" + (i+1))));
+
+const readingList = document.getElementById("readingList");
+readingQuestions.forEach((q,i)=> readingList.appendChild(buildCard(q, "R" + (i+1))));
+
+/* fade-in on scroll */
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add("in-view");
+      observer.unobserve(entry.target);
+    }
+  });
+}, {threshold:0.15});
+document.querySelectorAll(".question-card").forEach(c=>observer.observe(c));
+
+/* progress */
+const progressFill = document.getElementById("progressFill");
+const progressCount = document.getElementById("progressCount");
+const progressNote = document.getElementById("progressNote");
+
+function updateProgress(){
+  const answered = Object.keys(answers).length;
+  const pct = Math.round((answered/TOTAL)*100);
+  progressFill.style.width = pct + "%";
+  progressCount.textContent = answered + "/" + TOTAL;
+
+  let note = "Let's get started — take your time.";
+  if(pct === 0) note = "Let's get started — take your time.";
+  else if(pct < 26) note = "Nice start! Keep the calm energy going.";
+  else if(pct < 51) note = "You're making steady progress.";
+  else if(pct < 76) note = "More than halfway there — you've got this.";
+  else if(pct < 100) note = "Almost done — finish strong.";
+  else note = "All done! Submit whenever you're ready.";
+  progressNote.textContent = note;
+}
+
+/* timer */
+function startTimer(){
+  timerInterval = setInterval(()=>{
+    seconds++;
+    const m = String(Math.floor(seconds/60)).padStart(2,"0");
+    const s = String(seconds%60).padStart(2,"0");
+    document.getElementById("timerText").textContent = m + ":" + s;
+  }, 1000);
+}
+startTimer();
+
+/* word count */
+const essayInput = document.getElementById("essayInput");
+const wordCount = document.getElementById("wordCount");
+essayInput.addEventListener("input", ()=>{
+  const words = essayInput.value.trim().split(/\s+/).filter(Boolean);
+  wordCount.textContent = essayInput.value.trim() === "" ? 0 : words.length;
+});
+
+/* submit */
+document.getElementById("submitBtn").addEventListener("click", ()=>{
+  if(submitted){
+    location.reload();
+    return;
+  }
+  submitted = true;
+  clearInterval(timerInterval);
+
+  let correctCount = 0;
+  let grammarCorrect = 0;
+  let readingCorrect = 0;
+
+  function grade(list, isGrammar){
+    list.forEach(q=>{
+      const card = document.querySelector('.question-card[data-id="' + q.id + '"]');
+      card.classList.add("locked");
+      const given = answers[q.id];
+      const note = card.querySelector(".feedback-note");
+      if(given === q.correct){
+        card.classList.add("is-correct");
+        correctCount++;
+        if(isGrammar) grammarCorrect++; else readingCorrect++;
+      } else {
+        card.classList.add("is-wrong");
+        const correctText = q[q.correct];
+        note.innerHTML = "<strong>Correct answer (" + q.correct.toUpperCase() + "):</strong> " + correctText + "<br>" + q.exp;
+      }
+    });
+  }
+
+  grade(grammarQuestions, true);
+  grade(readingQuestions, false);
+
+  const pct = Math.round((correctCount/TOTAL)*100);
+  let message = "Keep going! 🌿 Every attempt is progress — check the notes below and try again.";
+  if(pct >= 90) message = "Outstanding! 🌟 You really know your grammar and reading skills.";
+  else if(pct >= 75) message = "Great job! 💪 You're doing really well — just a little more practice for perfection.";
+  else if(pct >= 50) message = "Good effort! 🌱 Review the notes below and you'll improve quickly.";
+
+  const panel = document.getElementById("resultsPanel");
+  panel.classList.remove("hidden");
+  panel.innerHTML =
+    '<div class="results-top">' +
+      '<div><div class="score-big">' + correctCount + ' / ' + TOTAL + '</div><div class="score-pct">' + pct + '%</div></div>' +
+      '<div class="results-msg">' + message + '</div>' +
+    '</div>' +
+    '<div class="breakdown">' +
+      '<div class="breakdown-item">Grammar: <b>' + grammarCorrect + '/30</b></div>' +
+      '<div class="breakdown-item">Reading: <b>' + readingCorrect + '/10</b></div>' +
+      '<div class="breakdown-item">Time taken: <b>' + document.getElementById("timerText").textContent + '</b></div>' +
+    '</div>' +
+    '<p class="results-note">Scroll down to see the correct answers and short explanations under any question you missed.</p>';
+
+  panel.scrollIntoView({behavior:"smooth", block:"start"});
+
+  document.getElementById("translationFeedback").classList.add("show");
+  document.getElementById("essayFeedback").classList.add("show");
+
+  const btn = document.getElementById("submitBtn");
+  btn.textContent = "Retake Exam";
+  document.getElementById("submitHint").textContent = "Want more practice? Click above to start a fresh attempt.";
+});
+</script>
+</body>
+</html>
